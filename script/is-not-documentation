@@ -1,12 +1,14 @@
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
 
-git checkout master
 
-cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .cache-master.js
+# git checkout master
+git checkout $(git rev-parse ${TRAVIS_COMMIT}^1)
+
+cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .cache-previous.js
 
 git checkout ${TRAVIS_COMMIT}
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .cache-this.js
 
-diff ./.cache-master.js ./.cache-this.js
+diff ./.cache-previous.js ./.cache-this.js
