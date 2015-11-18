@@ -5,7 +5,7 @@ echo "TRAVIS_COMMIT=${TRAVIS_COMMIT}"
 echo "TRAVIS_COMMIT_RANGE=${TRAVIS_COMMIT_RANGE}"
 
 # git checkout master
-git checkout $(git rev-parse ${TRAVIS_COMMIT}^1)
+git checkout $(git rev-parse ${TRAVIS_COMMIT}^2)
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .cache-previous.js
 
