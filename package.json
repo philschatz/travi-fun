@@ -4,8 +4,12 @@
   "description": "Hello there!",
   "main": "index.js",
   "scripts": {
-    "test": "node ./unit-tests.js"
+    "test": "./script/is-not-documentation"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "uglify-js": "^2.6.1"
+  }
 }
