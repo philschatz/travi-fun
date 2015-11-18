@@ -6,6 +6,7 @@ echo "TRAVIS_COMMIT_RANGE=${TRAVIS_COMMIT_RANGE}"
 git log
 
 START_COMMIT=$(echo ${TRAVIS_COMMIT_RANGE} | sed 's/\([a-z0-9]*\).*/\1/')
+echo "START_COMMIT=${START_COMMIT}"
 
 # git checkout master
 git checkout $(git rev-parse ${START_COMMIT}^1)
