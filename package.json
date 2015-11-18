@@ -1,0 +1,11 @@
+{
+  "name": "travis-test",
+  "version": "0.0.0",
+  "description": "Hello there!",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./unit-tests.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
