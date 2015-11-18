@@ -1,6 +1,8 @@
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
 
+echo "TRAVIS_COMMIT=${TRAVIS_COMMIT}"
+echo "TRAVIS_COMMIT_RANGE=${TRAVIS_COMMIT_RANGE}"
 
 # git checkout master
 git checkout $(git rev-parse ${TRAVIS_COMMIT}^1)
