@@ -4,7 +4,7 @@
   "description": "Hello there!",
   "main": "index.js",
   "scripts": {
-    "test": "node ./unit-tests.js"
+    "test": "git log && echo ${TRAVIS_COMMIT_RANGE} && node ./unit-tests.js"
   },
   "author": "",
   "license": "ISC"
