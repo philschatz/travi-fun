@@ -5,8 +5,10 @@ echo "TRAVIS_COMMIT=${TRAVIS_COMMIT}"
 echo "TRAVIS_COMMIT_RANGE=${TRAVIS_COMMIT_RANGE}"
 git log
 
+START_COMMIT=$(echo ${TRAVIS_COMMIT_RANGE} | sed 's/\([a-z0-9]*\).*/\1/')
+
 # git checkout master
-git checkout $(git rev-parse ${TRAVIS_COMMIT}^2)
+git checkout $(git rev-parse ${START_COMMIT}^1)
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .cache-previous.js
 
