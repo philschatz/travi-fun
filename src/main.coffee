@@ -1,3 +1,3 @@
 # Documentation Change again. Should still pass
 if true
-  x = -> console.log 'howdy2'
+  x = -> console.log 'howdy'
