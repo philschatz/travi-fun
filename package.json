@@ -3,13 +3,6 @@
   "version": "0.0.0",
   "description": "Hello there!",
   "main": "index.js",
-  "scripts": {
-    "test": "./script/is-not-documentation"
-  },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "coffee-script": "^1.10.0",
-    "uglify-js": "^2.6.1"
-  }
+  "license": "ISC"
 }
