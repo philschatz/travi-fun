@@ -42,6 +42,7 @@ echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 # git checkout -q ${END_COMMIT}
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
+cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-this.txt
 
 
 echo "DID_CODE_CHANGE: Building slug for the previous commit (to compare against)"
@@ -51,6 +52,7 @@ echo "DID_CODE_CHANGE: START_COMMIT=${START_COMMIT}"
 git checkout -q ${START_COMMIT}
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-previous.txt
+cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-previous.txt
 
 
 echo "DID_CODE_CHANGE: Comparing slugs"
