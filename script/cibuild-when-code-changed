@@ -41,6 +41,8 @@ echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 # No need to check out since the END_COMMIT is already checked out
 # git checkout -q ${END_COMMIT}
 
+# Files that go into the blob:
+#
 # 1. Compile & Minify CoffeeScript files
 # 2. Minify JavaScript files
 # 3. Concat JSON/CSON files
