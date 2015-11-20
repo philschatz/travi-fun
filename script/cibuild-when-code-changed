@@ -1,9 +1,4 @@
 #!/bin/sh
-printenv
-
-echo "--------------------------------------------"
-echo "Current commit: " $(git rev-parse HEAD)
-echo "Previous commit: " $(git rev-parse HEAD^1)
 
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
@@ -12,30 +7,35 @@ UGLIFY=./node_modules/.bin/uglifyjs
 npm install coffee-script@1.8.0
 npm install uglify-js@2.6.1
 
-# Find the two commits to compare against: [START-1 ... END]
+# Find the two commits to compare against: [START ... END]
 END_COMMIT=$(git rev-parse HEAD)
 
 # Find the commit to start from
-if [ ${TRAVIS_PULL_REQUEST} != "false" ]
+if [ "${TRAVIS_PULL_REQUEST}" != "false" ]
 then
   # Testing a whole Pull Request.
   # This means the current commit is a new one with the branch merged into the PR destination.
-  echo "CASE 1: This is a Pull Request case"
+  # `git fetch origin +refs/pull/[PR_NUMBER]/merge:`
+  # `git checkout -qf FETCH_HEAD`
+  echo "CASE 1: This is the continuous-integration/travis-ci/pr case"
   START_COMMIT=$(git rev-parse HEAD^1)
-elif [ -z ${TRAVIS_COMMIT_RANGE} ]
+
+elif [ -n "${TRAVIS_COMMIT_RANGE}" ]
 then
-  # No commit range specified. So this must be a new branch with 1 commit
-  echo "CASE 2: This is a new branch with 1 commit case"
-  START_COMMIT=$(git rev-parse HEAD^1)
-else
-  echo "CASE 3: This is a branch with a range case"
+  echo "CASE 2: This is a continuous-integration/travis-ci/push case"
+  # `git checkout -qf [SHA]` was called
   START_COMMIT=$(echo ${TRAVIS_COMMIT_RANGE} | sed 's/\([a-z0-9\^]*\).*/\1/')
+
+else
+  # No commit range specified.
+  echo "CASE 3: This is the other continuous-integration/travis-ci/push case"
+  START_COMMIT=$(git rev-parse HEAD^1)
 fi
 
 echo "START_COMMIT=${START_COMMIT}"
 echo "END_COMMIT=${END_COMMIT}"
 
-# No need to check out since it is already checked out
+# No need to check out since the END_COMMIT is already checked out
 # git checkout -q ${END_COMMIT}
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
