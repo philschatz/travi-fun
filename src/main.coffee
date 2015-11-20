@@ -1,3 +1,3 @@
 # Documentation change
 if true
-  x = -> console.log 'howdy2'
+  x = -> console.log 'howdy'
