@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -x -v
 
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
@@ -42,7 +42,7 @@ echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 # git checkout -q ${END_COMMIT}
 
 cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
-cat $(find ./ -name "*.js" | grep -v "node_modules" -v "spec") | ${UGLIFY} --beautify >> .ci-cache-this.txt
+cat $(find ./ -name "*.js" | grep -v "node_modules" | grep -v "spec") | ${UGLIFY} --beautify >> .ci-cache-this.txt
 cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-this.txt
 cat $(find ./spec -type f) >> .ci-cache-this.txt
 
@@ -53,10 +53,10 @@ echo "DID_CODE_CHANGE: START_COMMIT=${START_COMMIT}"
 # Check out the version *just before* the testing range
 git checkout -q ${START_COMMIT}
 
-cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
-cat $(find ./ -name "*.js" | grep -v "node_modules" -v "spec") | ${UGLIFY} --beautify >> .ci-cache-this.txt
-cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-this.txt
-cat $(find ./spec -type f) >> .ci-cache-this.txt
+cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-previous.txt
+cat $(find ./ -name "*.js" | grep -v "node_modules" | grep -v "spec") | ${UGLIFY} --beautify >> .ci-cache-previous.txt
+cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-previous.txt
+cat $(find ./spec -type f) >> .ci-cache-previous.txt
 
 
 echo "DID_CODE_CHANGE: Comparing slugs"
