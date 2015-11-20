@@ -36,6 +36,7 @@ else
 fi
 
 echo "DID_CODE_CHANGE: Building slug for this commit"
+echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 
 # No need to check out since the END_COMMIT is already checked out
 # git checkout -q ${END_COMMIT}
@@ -44,6 +45,7 @@ cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --b
 
 
 echo "DID_CODE_CHANGE: Building slug for the previous commit (to compare against)"
+echo "DID_CODE_CHANGE: START_COMMIT=${START_COMMIT}"
 
 # Check out the version *just before* the testing range
 git checkout -q ${START_COMMIT}
