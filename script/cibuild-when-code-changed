@@ -1,7 +1,7 @@
 #!/bin/sh
 printenv
 
-
+echo "--------------------------------------------"
 echo "Current commit: " $(git rev-parse HEAD)
 echo "Previous commit: " $(git rev-parse HEAD^1)
 
@@ -13,30 +13,37 @@ npm install coffee-script@1.8.0
 npm install uglify-js@2.6.1
 
 # Find the two commits to compare against: [START-1 ... END]
-END_COMMIT=$(git rev-parse HEAD)
+# END_COMMIT=$(git rev-parse HEAD)
 
-if [ -z ${TRAVIS_COMMIT} ]
+# Find the commit to start from
+if [ ${TRAVIS_PULL_REQUEST} != "false" ]
 then
-  START_COMMIT=$(git rev-parse HEAD)
-# If this is the first commit on a branch then TRAVIS_COMMIT_RANGE is empty
-# so just use the current commit
+  # Testing a whole Pull Request.
+  # This means the current commit is a new one with the branch merged into the PR destination.
+  START_COMMIT=$(git rev-parse HEAD^1)
 elif [ -z ${TRAVIS_COMMIT_RANGE} ]
 then
-  # For Pull Requests TRAVIS_COMMIT is merged into master so this field is no longer valid
-  START_COMMIT=$(git rev-parse HEAD)
+  # No commit range specified. So this must be a new branch with 1 commit
+  START_COMMIT=$(git rev-parse HEAD^1)
 else
-  START_COMMIT=$(echo ${TRAVIS_COMMIT_RANGE} | sed 's/\([a-z0-9]*\).*/\1/')
+  START_COMMIT=$(echo ${TRAVIS_COMMIT_RANGE} | sed 's/\([a-z0-9\^]*\).*/\1/')
 fi
 
+echo "START_COMMIT=${START_COMMIT}"
+echo "END_COMMIT=${END_COMMIT}"
+
+# No need to check out since it is already checked out
+# git checkout -q ${END_COMMIT}
+
+cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
+
+
 # Check out the version *just before* the testing range
-git checkout -q $(git rev-parse ${START_COMMIT}^1)
+git checkout -q ${START_COMMIT}
 
 cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-previous.txt
 
 
-git checkout -q ${END_COMMIT}
-
-cat $(find ./src -name "*.coffee") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
 
 diff ./.ci-cache-previous.txt ./.ci-cache-this.txt > /dev/null
 
