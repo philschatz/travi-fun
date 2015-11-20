@@ -1,4 +1,4 @@
-#!/bin/bash -x -v
+#!/bin/sh
 
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
