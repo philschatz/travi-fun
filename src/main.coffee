@@ -1,3 +1,3 @@
-# Documentation Change3. Should still pass
+# Documentation
 if true
   x = -> console.log 'howdy'
