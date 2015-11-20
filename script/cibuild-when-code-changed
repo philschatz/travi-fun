@@ -41,6 +41,10 @@ echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 # No need to check out since the END_COMMIT is already checked out
 # git checkout -q ${END_COMMIT}
 
+# 1. Compile & Minify CoffeeScript files
+# 2. Minify JavaScript files
+# 3. Concat JSON/CSON files
+# 4. Concat spec tests and fixtures
 cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
 cat $(find ./ -name "*.js" | grep -v "node_modules" | grep -v "spec") | ${UGLIFY} --beautify >> .ci-cache-this.txt
 cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-this.txt
