@@ -2,9 +2,11 @@
 
 COFFEE=./node_modules/.bin/coffee
 UGLIFY=./node_modules/.bin/uglifyjs
+BABEL=./node_modules/.bin/babel
 
 # Was unsure where to place these since putting them in build/ is too late.
 npm install coffee-script@1.8.0
+npm install babel-cli@6.2.0
 npm install uglify-js@2.6.1
 
 # Find the two commits to compare against: [START ... END]
@@ -44,11 +46,11 @@ echo "DID_CODE_CHANGE: END_COMMIT=${END_COMMIT}"
 # Files that go into the blob:
 #
 # 1. Compile & Minify CoffeeScript files
-# 2. Minify JavaScript files
+# 2. Transpile JavaScript files
 # 3. Concat JSON/CSON files
 # 4. Concat spec tests and fixtures
 cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-this.txt
-cat $(find ./ -name "*.js" | grep -v "node_modules" | grep -v "spec") | ${UGLIFY} --beautify >> .ci-cache-this.txt
+find ./src -name "*.js" | xargs ${BABEL} >> .ci-cache-this.txt
 cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-this.txt
 cat $(find ./spec -type f) >> .ci-cache-this.txt
 
@@ -60,7 +62,7 @@ echo "DID_CODE_CHANGE: START_COMMIT=${START_COMMIT}"
 git checkout -q ${START_COMMIT}
 
 cat $(find ./ -name "*.coffee" | grep -v "spec") | ${COFFEE} --compile --stdio | ${UGLIFY} --beautify > .ci-cache-previous.txt
-cat $(find ./ -name "*.js" | grep -v "node_modules" | grep -v "spec") | ${UGLIFY} --beautify >> .ci-cache-previous.txt
+find ./src -name "*.js" | xargs ${BABEL} >> .ci-cache-this.txt
 cat $(find ./ -name "*.?son" | grep -v "node_modules") >> .ci-cache-previous.txt
 cat $(find ./spec -type f) >> .ci-cache-previous.txt
 
